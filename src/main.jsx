@@ -16,16 +16,17 @@ const router = createBrowserRouter([
   {
     element: <App />,
     children: [
-      {
-        path: '/',
-        element:<Home/>,
-      },
+     
       {
         path: 'dashboard',
         element:<Dashboard/>
       },
     ]
   },
+   {
+        path: '/',
+        element:<Home/>,
+      },
   {
     path: '/auth/sign-in', // Remove the dot at the beginning
     element: <SignInPage />,
