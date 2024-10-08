@@ -5,7 +5,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
+  //   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useState } from "react";
 import { Button } from "../ui/button";
@@ -14,6 +14,14 @@ import { Textarea } from "@/components/ui/textarea";
 
 function AddNewInterview() {
   const [openDialog, setOpenDialog] = useState(false);
+  const [jobPosition, setJobPosition] = useState();
+  const [jobDesc, setJobDesc] = useState();
+  const [jobExperience, setJobExperience] = useState();
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    console.log(jobPosition, jobDesc, jobExperience);
+  };
   return (
     <div>
       <div
@@ -23,6 +31,7 @@ function AddNewInterview() {
       >
         <h2 className=" text-lg text-center">+Add New</h2>
       </div>
+
       <Dialog open={openDialog}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
@@ -30,35 +39,52 @@ function AddNewInterview() {
               Tell Us More About Your Job Interviewing
             </DialogTitle>
             <DialogDescription>
-              <div>
-                <h2>
-                  Add Details About Your Job Position/Role,Job Description and
-                  Years of Experience
-                </h2>
-                <div className="mt-7 my-3 ">
-                  <label>Job Role/Job Position</label>
-                  <Input placeholder="Ex.Full Stack Developer" />
+              <form onSubmit={onSubmit}>
+                <div>
+                  <h2>
+                    Add Details About Your Job Position/Role,Job Description and
+                    Years of Experience
+                  </h2>
+                  <div className="mt-7 my-3 ">
+                    <label>Job Role/Job Position</label>
+                    <Input
+                      placeholder="Ex.Full Stack Developer"
+                      required
+                      onChange={(event) => setJobPosition(event.target.value)}
+                    />
+                  </div>
+
+                  <div className=" my-3 ">
+                    <label>Job Description/Tech Stack (In Short)</label>
+                    <Textarea
+                      placeholder="React,Node,Express Js,Angular etc.."
+                      required
+                      onChange={(event) => setJobDesc(event.target.value)}
+                    />
+                  </div>
+                  <div className="my-3 ">
+                    <label>Years of Experience</label>
+                    <Input
+                      placeholder="Ex.5"
+                      type="number"
+                      max="50"
+                      required
+                      onChange={(event) => setJobExperience(event.target.value)}
+                    />
+                  </div>
                 </div>
 
-                <div className=" my-3 ">
-                  <label>Job Description/Tech Stack (In Short)</label>
-                  <Textarea placeholder="React,Node,Express Js,Angular etc.." />
+                <div className="flex gap-5 justify-end">
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    onClick={() => setOpenDialog(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button type="submit">Start Interview</Button>
                 </div>
-                <div className=" my-3 ">
-                  <label>Job Description/Tech Stack (In Short)</label>
-                  <Textarea placeholder="React,Node,Express Js,Angular etc.." />
-                </div>
-                <div className="my-3 ">
-                  <label>Years of Experience</label>
-                  <Input placeholder="Ex.5" type="number" />
-                </div>
-              </div>
-              <div className="flex gap-5 justify-end">
-                <Button variant="ghost" onClick={() => setOpenDialog(false)}>
-                  Cancel
-                </Button>
-                <Button>Start Interview</Button>
-              </div>
+              </form>
             </DialogDescription>
           </DialogHeader>
         </DialogContent>
