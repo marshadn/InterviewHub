@@ -5,27 +5,94 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  //   DialogTrigger,
+  //   DialogTrigger
 } from "@/components/ui/dialog";
 import { useState } from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { chatSession } from "../../../utils/GeminiAIModel";
+import.meta.env.VITE_INTERVIEW_QUESTION_COUNT;
+import.meta.env.VITE_GEMINI_API_KEY;
+import { db } from "../../../utils/db";
+import { MockInterview } from "../../../utils/schema";
+import { v4 as uuidv4 } from "uuid";
+import { useUser } from "@clerk/clerk-react";
+import moment from "moment";
 
 function AddNewInterview() {
   const [openDialog, setOpenDialog] = useState(false);
   const [jobPosition, setJobPosition] = useState();
   const [jobDesc, setJobDesc] = useState();
   const [jobExperience, setJobExperience] = useState();
+  const [loading, setLoading] = useState(false);
+  const [jsonResponse, setJsonResponse] = useState([]);
+  const { user } = useUser();
 
-  const onSubmit = (e) => {
+  const LoaderCircle = () => {
+    return (
+      <div
+        style={{
+          border: "4px solid #f3f3f3",
+          borderRadius: "50%",
+          borderTop: "4px solid #3498db",
+          width: "24px",
+          height: "24px",
+          animation: "spin 2s linear infinite",
+        }}
+      ></div>
+    );
+  };
+
+  const onSubmit = async (e) => {
+    setLoading(true);
     e.preventDefault();
     console.log(jobPosition, jobDesc, jobExperience);
+
+    const InputPrompt =
+      "Job Position:" +
+      jobPosition +
+      ", Job Description:" +
+      jobDesc +
+      ", Years of experience:" +
+      jobExperience +
+      ". Based on this please give me " +
+      import.meta.env.VITE_INTERVIEW_QUESTION_COUNT +
+      " interview questions with answered in json format, give question and answered as field in json";
+
+    const result = await chatSession.sendMessage(InputPrompt);
+    const MockJsonResponse = result.response
+      .text()
+      .replace("```json", "")
+      .replace("```", "");
+    console.log(JSON.parse(MockJsonResponse));
+    setJsonResponse(MockJsonResponse);
+    if (MockJsonResponse) {
+      const resp = await db
+        .insert(MockInterview)
+        .values({
+          mockId: uuidv4(),
+          jsonMockResp: MockJsonResponse,
+          jobPosition: jobPosition,
+          jobDesc: jobDesc,
+          jobExperience: jobExperience,
+          createdBy: user?.primaryEmailAddress?.emailAddress,
+          createdAt: moment().format("DD-MM-yyyy"),
+        })
+        .returning({ mockId: MockInterview.mockId });
+      console.log("inserted id:", resp);
+      if (resp) {
+        setOpenDialog(false);
+      }
+    } else {
+      console.log("error");
+    }
+    setLoading(false);
   };
   return (
     <div>
       <div
-        className="p-10 border rounded-lg bg-secondary 
+        className="p-10 border rounded-lg bg-secondary
           hover:scale-105 hover:shadow-md cursor-pointer transition-all"
         onClick={() => setOpenDialog(true)}
       >
@@ -82,7 +149,16 @@ function AddNewInterview() {
                   >
                     Cancel
                   </Button>
-                  <Button type="submit">Start Interview</Button>
+                  <Button type="submit" disabled={loading}>
+                    {loading ? (
+                      <>
+                        <LoaderCircle className="animate-spin" />{" "}
+                        &apos;Generating from AI
+                      </>
+                    ) : (
+                      "Start Interview"
+                    )}
+                  </Button>
                 </div>
               </form>
             </DialogDescription>
