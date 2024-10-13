@@ -19,6 +19,7 @@ import { MockInterview } from "../../../utils/schema";
 import { v4 as uuidv4 } from "uuid";
 import { useUser } from "@clerk/clerk-react";
 import moment from "moment";
+import { useNavigate } from "react-router-dom";
 
 function AddNewInterview() {
   const [openDialog, setOpenDialog] = useState(false);
@@ -27,6 +28,7 @@ function AddNewInterview() {
   const [jobExperience, setJobExperience] = useState();
   const [loading, setLoading] = useState(false);
   const [jsonResponse, setJsonResponse] = useState([]);
+  const navigate = useNavigate();
   const { user } = useUser();
 
   const LoaderCircle = () => {
@@ -43,6 +45,112 @@ function AddNewInterview() {
       ></div>
     );
   };
+
+  // const onSubmit = async (e) => {
+  //   setLoading(true);
+  //   e.preventDefault();
+  //   console.log(jobPosition, jobDesc, jobExperience);
+
+  //   const InputPrompt =
+  //     "Job Position:" +
+  //     jobPosition +
+  //     ", Job Description:" +
+  //     jobDesc +
+  //     ", Years of experience:" +
+  //     jobExperience +
+  //     ". Based on this please give me " +
+  //     import.meta.env.VITE_INTERVIEW_QUESTION_COUNT +
+  //     " interview questions with answered in json format, give question and answered as field in json";
+
+  //   const result = await chatSession.sendMessage(InputPrompt);
+  //   const MockJsonResponse = result.response
+  //     .text()
+  //     .replace("```json", "")
+  //     .replace("```", "");
+  //   console.log(JSON.parse(MockJsonResponse));
+  //   setJsonResponse(MockJsonResponse);
+  //   if (MockJsonResponse) {
+  //     const resp = await db
+  //       .insert(MockInterview)
+  //       .values({
+  //         mockId: uuidv4(),
+  //         jsonMockResp: MockJsonResponse,
+  //         jobPosition: jobPosition,
+  //         jobDesc: jobDesc,
+  //         jobExperience: jobExperience,
+  //         createdBy: user?.primaryEmailAddress?.emailAddress,
+  //         createdAt: moment().format("DD-MM-yyyy"),
+  //       })
+  //       .returning({ mockId: MockInterview.mockId });
+  //     console.log("inserted id:", resp);
+  //     if (resp) {
+  //       setOpenDialog(false);
+  //     }
+  //   } else {
+  //     console.log("error");
+  //   }
+  //   setLoading(false);
+  // };
+
+  // const onSubmit = async (e) => {
+  //   setLoading(true);
+  //   e.preventDefault();
+  //   console.log(jobPosition, jobDesc, jobExperience);
+
+  //   const InputPrompt =
+  //     `Job Position: ${jobPosition}, Job Description: ${jobDesc}, Years of experience: ${jobExperience}. Based on this, please give me ` +
+  //     `${
+  //       import.meta.env.VITE_INTERVIEW_QUESTION_COUNT
+  //     } interview questions with answers in JSON format.`;
+
+  //   try {
+  //     // Fetch AI response
+  //     const result = await chatSession.sendMessage(InputPrompt);
+
+  //     // Get response text and clean it up
+  //     const rawResponse = await result.response.text();
+  //     console.log("Raw response:", rawResponse);
+
+  //     const cleanedResponse = rawResponse
+  //       .replace("```json", "")
+  //       .replace("```", "")
+  //       .trim(); // Remove unnecessary characters like markdown formatting
+
+  //     console.log("Cleaned response:", cleanedResponse);
+
+  //     // Try parsing the JSON response
+  //     const parsedJson = JSON.parse(cleanedResponse);
+  //     console.log("Parsed JSON:", parsedJson);
+
+  //     setJsonResponse(parsedJson);
+
+  //     // Insert parsed data into the database
+  //     if (parsedJson) {
+  //       const resp = await db
+  //         .insert(MockInterview)
+  //         .values({
+  //           mockId: uuidv4(),
+  //           jsonMockResp: parsedJson, // Store parsed JSON instead of raw text
+  //           jobPosition: jobPosition,
+  //           jobDesc: jobDesc,
+  //           jobExperience: jobExperience,
+  //           createdBy: user?.primaryEmailAddress?.emailAddress,
+  //           createdAt: moment().format("DD-MM-yyyy"),
+  //         })
+  //         .returning({ mockId: MockInterview.mockId });
+
+  //       console.log("Inserted ID:", resp);
+
+  //       if (resp) {
+  //         setOpenDialog(false);
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error("Error parsing or inserting JSON:", error);
+  //   }
+
+  //   setLoading(false);
+  // };
 
   const onSubmit = async (e) => {
     setLoading(true);
@@ -83,12 +191,14 @@ function AddNewInterview() {
       console.log("inserted id:", resp);
       if (resp) {
         setOpenDialog(false);
+        navigate("/dashboard/interview/" + resp[0]?.mockId);
       }
     } else {
       console.log("error");
     }
     setLoading(false);
   };
+
   return (
     <div>
       <div
