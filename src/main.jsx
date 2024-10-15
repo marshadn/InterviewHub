@@ -9,6 +9,7 @@ import Dashboard from "./dashboard/index.jsx";
 import { ClerkProvider } from "@clerk/clerk-react";
 import Interview from "./dashboard/interview/[interviewId]/page.jsx";
 import Start from "./dashboard/interview/[interviewId]/start/page.jsx";
+import Feedback from "./dashboard/interview/[interviewId]/feedback/page.jsx";
 
 // Import your publishable key
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
       {
         path: "/dashboard/interview/:interviewId/start",
         element: <Start />,
+      },
+       {
+        path: "/dashboard/interview/:interviewId/feedback", // Add feedback route
+        element: <Feedback />,
       },
     ],
   },
