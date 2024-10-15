@@ -12,6 +12,17 @@ export const MockInterview = pgTable("mockInterview", {
   mockId: varchar("mockId", { length: 255 }).notNull(), // Define length
 });
 
+export const userAnswer = pgTable("userAnswer", {
+  id: serial("id").primaryKey(),
+  mockIdRef: varchar("mockId", { length: 255 }).notNull(),
+  question: varchar("question", { length: 255 }).notNull(),
+  correctAns: text("correctAns"),
+  userAns: text("userAns"),
+  feedback: text("feedback"),
+  rating: varchar("rating", { length: 255 }),
+  userEmail: varchar("userEmail", { length: 255 }),
+  createdAt: varchar("createdAt", { length: 255 }),
+});
 // commnads to run on terminal are
 // npm run db:push
 // npm run db:studio

@@ -40,7 +40,11 @@ function Start() {
           activeQuestionIndex={activeQuestionIndex}
         />
         {/* Audio Recording */}
-        <RecordAnswerSection/>
+        <RecordAnswerSection
+          mockInterviewQuestion={mockInterviewQuestion}
+          activeQuestionIndex={activeQuestionIndex}
+          interviewData={interviewData}
+        />
       </div>
     </div>
   );
