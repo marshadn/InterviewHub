@@ -222,8 +222,8 @@ function AddNewInterview() {
                     Add Details About Your Job Position/Role,Job Description and
                     Years of Experience
                   </h2>
-                  <div className="mt-7 my-3 ">
-                    <label>Job Role/Job Position</label>
+                  <div className="mt-7 my-7 mb-7">
+                    <label className="mb-2 block">Job Role/Job Position</label>
                     <Input
                       placeholder="Ex.Full Stack Developer"
                       required
@@ -232,7 +232,7 @@ function AddNewInterview() {
                   </div>
 
                   <div className=" my-3 ">
-                    <label>Job Description/Tech Stack (In Short)</label>
+                    <label className="mb-2 block">Job Description/Tech Stack (In Short)</label>
                     <Textarea
                       placeholder="React,Node,Express Js,Angular etc.."
                       required
@@ -240,7 +240,7 @@ function AddNewInterview() {
                     />
                   </div>
                   <div className="my-3 ">
-                    <label>Years of Experience</label>
+                    <label className="mb-2 block">Years of Experience</label>
                     <Input
                       placeholder="Ex.5"
                       type="number"
