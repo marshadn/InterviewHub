@@ -2,7 +2,7 @@
 
 const HowItWorks = () => {
   return (
-    <div className="p-5 flex justify-center">
+    <div className="p-5 flex justify-center mt-8">
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 max-w-3xl transition-transform duration-300 ease-in-out transform hover:scale-105 hover:border-2 hover:border-primary hover:shadow-xl">
         <h2 className="text-2xl font-bold mb-4 text-center">How It Works</h2>
         <p className="mb-6 text-gray-700 dark:text-gray-300 text-center">
