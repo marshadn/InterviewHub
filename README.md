@@ -43,11 +43,17 @@ src
 │       └── [interviewId]
 │           └── page.jsx     # Interview page with dynamic routing
 ├── components               # Reusable UI components
-│   ├── ResumeUploader       # Component for uploading and analyzing resume content
-│   ├── FeedbackDisplay      # Component for displaying feedback from AI
-│   └── QuestionGenerator    # Component for generating questions based on role and skills
+│   ├── ResumeSkillMatcher   # Component for uploading and analyzing resume content as texts
+│   ├── MatchResultPage      # Component for displaying resume feedback from AI
+│   └── AskQuestions         # Component for generating questions based on role and skills
+|   └── Footer               # Around all footer section components are here
+|   └── Header               # Around all header section components are here
 ├── utils                    # Utility functions and constants
 └── styles                   # Tailwind CSS and other custom styling files
+├── home                     # Main home page of the site
+└── lib                      # db
+├── auth/sign-in             # Basic authentication
+
 ```
 
 
@@ -57,7 +63,7 @@ Installation: Clone the repository and navigate into the project directory.
 
 ```
 
-git clone https://github.com/marshadn/mock-InterviewHub.git
+git clone https://github.com/marshadn/InterviewHub.git
 cd InterviewHub
 ```
 
@@ -133,4 +139,9 @@ The Mock Interview Web App addresses these problems by providing:
 [Muhamed Marshad] - Developer and Maintainer of the InterviewHub
 
 
+```
+ Muhamed Marshad
+ TVE23-MCA-2036
+ College of Engineering Trivandrum
+```
 
