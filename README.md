@@ -141,7 +141,7 @@ The Mock Interview Web App addresses these problems by providing:
 
 ```
  Muhamed Marshad
- TVE23-MCA-2036
+ TVE23MCA-2036
  College of Engineering Trivandrum
 ```
 
