@@ -200,14 +200,31 @@ function AddNewInterview() {
   };
 
   return (
-    <div>
-      <div
+    <div >
+      {/* <div
         className="p-10 border rounded-lg bg-secondary
           hover:scale-105 hover:shadow-md cursor-pointer transition-all"
         onClick={() => setOpenDialog(true)}
       >
         <h2 className=" text-lg text-center">+Add New</h2>
-      </div>
+      </div> */}
+       <div
+  className="w-96 h-44 p-10 rounded-lg bg-secondary transition-all cursor-pointer relative flex items-center justify-center"
+  onClick={() => setOpenDialog(true)}
+  style={{
+    backgroundImage: 'url("https://images.squarespace-cdn.com/content/v1/5c8e943534c4e264ef50e68f/1614371058261-HPMX8VXL6VT8EAXPACE2/image-asset.jpeg")',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+  }}
+>
+  <div className="border-2 border-transparent rounded-lg hover:border-4 hover:border-primary hover:shadow-lg transition-all absolute inset-0"></div>
+  <h2
+    className="text-lg font-bold text-center text-white relative z-10"
+    style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.7)' }} // Dark black shadow effect
+  >
+    Add New Interview
+  </h2>
+</div>
 
       <Dialog open={openDialog}>
         <DialogContent className="max-w-2xl">
