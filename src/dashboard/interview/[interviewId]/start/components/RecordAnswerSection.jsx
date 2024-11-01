@@ -1,12 +1,7 @@
-
-
-
-
-
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react"; // Import useRef
 import { Button } from "../../../../../components/ui/button";
 import useSpeechToText from "react-hook-speech-to-text";
-import { Mic } from "lucide-react";
+import { Mic, StopCircle } from "lucide-react"; // Import additional icon for stop recording
 import { toast } from "sonner";
 import { chatSession } from "../../../../../../utils/GeminiAIModel";
 import { db } from "../../../../../../utils/db";
@@ -14,7 +9,7 @@ import { userAnswer } from "../../../../../../utils/schema"; // Make sure this i
 import { useUser } from "@clerk/clerk-react";
 import moment from "moment";
 
-function RecordAnswerSection({ mockInterviewQuestion, activeQuestionIndex, interviewData }) {
+function RecordAnswerSection({ mockInterviewQuestion, activeQuestionIndex, interviewData, stopStream }) {
   const [userAnswerState, setUserAnswerState] = useState(""); // Renaming state to avoid conflict with table name
   const { user } = useUser();
   const [loading, setLoading] = useState(false);
@@ -22,12 +17,35 @@ function RecordAnswerSection({ mockInterviewQuestion, activeQuestionIndex, inter
     continuous: true,
     useLegacyResults: false,
   });
+  
+  const videoRef = useRef(null); // Create a reference for the video element
+  const mediaStreamRef = useRef(null); // Create a reference for the media stream
 
   useEffect(() => {
+    // Function to start webcam
+    const startWebcam = async () => {
+      try {
+        mediaStreamRef.current = await navigator.mediaDevices.getUserMedia({ video: true });
+        if (videoRef.current) {
+          videoRef.current.srcObject = mediaStreamRef.current;
+          videoRef.current.play();
+        }
+      } catch (err) {
+        console.error("Error accessing webcam: ", err);
+        toast("Unable to access the webcam.");
+      }
+    };
+
+    startWebcam(); // Call the function to start the webcam
+
     results.map((result) =>
       setUserAnswerState((prevAns) => prevAns + result?.transcript)
     );
-  }, [results]);
+
+    return () => {
+      stopStream(); // Call stopStream when the component unmounts
+    };
+  }, [results, stopStream]);
 
   const StartStopRecording = async () => {
     if (isRecording) {
@@ -84,20 +102,42 @@ function RecordAnswerSection({ mockInterviewQuestion, activeQuestionIndex, inter
   };
 
   return (
-    <div className="flex items-center flex-col">
-      <Button variant="outline" className="my-10" onClick={StartStopRecording}>
-        {isRecording ? (
-          <h2 className="text-red-600 flex gap-2">
-            <Mic />
-            Stop Recording
-          </h2>
-        ) : (
-          "Record Answer"
-        )}
-      </Button>
-      <Button onClick={updateUserAnswer} disabled={loading}>
-        {loading ? "Saving..." : "Submit Answer"}
-      </Button>
+    <div className="flex items-center flex-col mt-4"> {/* Add margin-top to move away from header */}
+      {/* Webcam video feed with rounded borders and shadow */}
+      <video
+        ref={videoRef}
+        className="mb-4 rounded-lg shadow-md border-2 border-gray-300"
+        width="320"
+        height="240"
+        autoPlay
+        muted
+      />
+      <div className="flex space-x-4"> {/* Align buttons horizontally with space in between */}
+        <Button
+          variant="outline"
+          className="my-2 w-full max-w-xs flex items-center justify-center gap-2"
+          onClick={StartStopRecording}
+        >
+          {isRecording ? (
+            <>
+              <StopCircle className="text-red-600" /> {/* Icon for stop recording */}
+              <span className="text-red-600">Stop Recording</span>
+            </>
+          ) : (
+            <>
+              <Mic className="text-green-600" /> {/* Mic icon for record */}
+              <span>Record Answer</span>
+            </>
+          )}
+        </Button>
+        <Button
+          onClick={updateUserAnswer}
+          disabled={loading}
+          className="my-2 w-full max-w-xs"
+        >
+          {loading ? "Saving..." : "Submit Answer"}
+        </Button>
+      </div>
     </div>
   );
 }
@@ -107,124 +147,6 @@ export default RecordAnswerSection;
 
 
 
-// import { useEffect, useState  } from "react";
-// import { Button } from "../../../../../components/ui/button";
-// import useSpeechToText from "react-hook-speech-to-text";
-// import { Mic } from "lucide-react";
-// import { toast } from "sonner";
-// import { chatSession } from "../../../../../../utils/GeminiAIModel";
-// import { db } from "../../../../../../utils/db";
-// import { userAnswer } from "../../../../../../utils/schema";
-// import { useUser } from "@clerk/clerk-react";
-// import moment from "moment";
 
 
-// function RecordAnswerSection(
-//   mockInterviewQuestion,
-//   activeQuestionIndex,
-//   interviewData
-// ) {
-//   const [userAnswer, setUserAnswer] = useState("");
-//   const { user } = useUser();
-//   const [loading, setLoading] = useState(false);
-//   const {
-//     error,
-//     interimResult,
-//     isRecording,
-//     results,
-//     startSpeechToText,
-//     stopSpeechToText,
-//     setResults,
-//   } = useSpeechToText({
-//     continuous: true,
-//     useLegacyResults: false,
-//   });
 
-//   useEffect(() => {
-//     results.map((result) =>
-//       setUserAnswer((prevAns) => prevAns + result?.transcript)
-//     );
-//   }, [results]);
-
-//   useEffect(() => {
-//     if (!isRecording && userAnswer.length > 10) {
-//       updateUserAnswer();
-//     }
-//     //  if (userAnswer?.length < 10) {
-//     //     setLoading(false);
-//     //     toast("Error while saving your answer! Record again!");
-//     //     return;
-//     //   }
-//   },[userAnswer])
-
-//   const StartStopRecording = async () => {
-//     if (isRecording) {
-     
-//       stopSpeechToText();
-     
-
-      
-//     } else {
-//       startSpeechToText();
-//     }
-//   };
-//   const updateUserAnswer = async () => {
-//     console.log(userAnswer);
-//      setLoading(true);
-//     const feedbackPrompt = 
-//         "Question:" +
-//         mockInterviewQuestion[activeQuestionIndex]?.question +
-//         ", User Answer: " +
-//         userAnswer +
-//         ". Based on the question and user's answer, please provide a rating and feedback (3-5 lines) in JSON format with fields 'rating' and 'feedback'.";
-
-//       const result = await chatSession.sendMessage(feedbackPrompt);
-
-//       const mockJsonResp = result.response
-//         .text()
-//         .replace("```json", "")
-//         .replace("```", "");
-
-//       console.log(mockJsonResp);
-
-//       const JsonFeedbackResp = JSON.parse(mockJsonResp);
-
-//       const resp = await db.insert('UserAnswer').values({
-//         mockIdRef: interviewData?.mockId,
-//         question: mockInterviewQuestion[activeQuestionIndex]?.question,
-//         correctAns: mockInterviewQuestion[activeQuestionIndex]?.answer,
-//         userAns: userAnswer,
-//         feedback: JsonFeedbackResp?.feedback,
-//         rating: JsonFeedbackResp?.rating,
-//         userEmail: user?.primaryEmailAddress?.emailAddress,
-//         createdAt:moment().format("DD-MM-yyyy"),
-//       })
-      
-//       if (resp) {
-//         toast('User Answer Recorded Succesfully!')
-//         setUserAnswer('');
-//         setResults([]);
-//       }
-//       // setUserAnswer('');
-//       setResults([]);
-//       setLoading(false);
-//   }
-
-//   return (
-//     <div className="flex items-center flex-col">
-//       <Button variant="outline" className="my-10" onClick={StartStopRecording}>
-//         {isRecording ? (
-//           <h2 className="text-red-600 flex gap-2">
-//             <Mic />
-//             Stop Recording
-//           </h2>
-//         ) : (
-//           "Record Answer"
-//         )}
-//       </Button>
-//       <Button onClick={() => console.log(userAnswer)}>Show User Answer</Button>
-//     </div>
-//   );
-// }
-
-// export default RecordAnswerSection;
