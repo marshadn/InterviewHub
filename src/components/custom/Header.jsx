@@ -1,49 +1,43 @@
-import { useState } from 'react';
 import { useUser } from "@clerk/clerk-react";
 import { Button } from "../ui/button";
 import { Link } from "react-router-dom";
 import { UserButton } from "@clerk/clerk-react";
-import { FaSun, FaMoon, FaLaptop } from 'react-icons/fa'; // Importing FontAwesome icons
+import { FaLaptop } from 'react-icons/fa';
 
 function Header() {
   const { user, isSignedIn } = useUser();
-  const [darkMode, setDarkMode] = useState(false);
-
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-    document.documentElement.classList.toggle('dark');
-  };
 
   return (
-    <div className="p-3 px-5 flex justify-between items-center shadow-md dark:bg-gray-800 bg-white dark:text-gray-100">
+    <div className="p-3 px-5 flex flex-col sm:flex-row justify-between items-center shadow-sm bg-white text-gray-800">
       {/* Logo and Title */}
-      <div className="flex items-center gap-2 text-primary">
-        <FaLaptop className="text-2xl" /> {/* Computer Icon */}
-        <h1 className="text-2xl font-bold font-sfpro">InterviewHub</h1> {/* Single heading */}
+      <div className="flex items-center gap-2 text-primary mb-3 sm:mb-0">
+        <FaLaptop className="text-2xl" /> 
+        <h1 className="text-2xl font-bold">InterviewHub</h1>
       </div>
 
       {/* Centered Navigation */}
-      <div className="flex flex-grow justify-center gap-8">
-        <Link to="/dashboard" className="font-bold text-primary hover:text-gray-600 transition-transform duration-200 transform hover:scale-105 font-sfpro">Dashboard</Link>
-        <Link to="/faqs" className="font-bold text-primary hover:text-gray-600 transition-transform duration-200 transform hover:scale-105 font-sfpro">FAQs</Link>
-        <Link to="/pricing" className="font-bold sfpro text-primary hover:text-gray-600 transition-transform duration-200 transform hover:scale-105">Pricing</Link>
-        <Link to="/how-it-works" className=" font-sfpro font-bold text-primary hover:text-gray-600 transition-transform duration-200 transform hover:scale-105">How it works</Link>
+      <div className="flex flex-col sm:flex-row flex-grow justify-center items-center gap-4 sm:gap-8">
+        <Link to="/dashboard" className="text-gray-800 hover:text-primary font-semibold transition-transform duration-200 transform hover:scale-105">
+          Dashboard
+        </Link>
+        <Link to="/faqs" className="text-gray-800 hover:text-primary font-semibold transition-transform duration-200 transform hover:scale-105">
+          FAQs
+        </Link>
+        <Link to="/ask" className="text-gray-800 hover:text-primary font-semibold transition-transform duration-200 transform hover:scale-105">
+          Ask Questions?
+        </Link>
+        <Link to="/how-it-works" className="text-gray-800 hover:text-primary font-semibold transition-transform duration-200 transform hover:scale-105">
+          How it works
+        </Link>
       </div>
 
-      {/* User Button and Dark Mode Toggle */}
-      <div className="flex gap-4 items-center">
-        {/* Dark Mode Toggle Icon */}
-        <button onClick={toggleDarkMode} className="text-xl">
-          {darkMode ? <FaSun className="text-gray-400" /> : <FaMoon className="text-gray-300" />}
-        </button>
-
+      {/* User Button */}
+      <div className="flex items-center gap-4">
         {isSignedIn ? (
-          <div className="flex gap-2 items-center">
-            <UserButton />
-          </div>
+          <UserButton />
         ) : (
           <Link to="/auth/sign-in">
-            <Button className="dark:bg-gray-700 dark:text-white">Get Started</Button>
+            <Button className="bg-primary text-white">Get Started</Button>
           </Link>
         )}
       </div>
@@ -54,95 +48,3 @@ function Header() {
 export default Header;
 
 
-
-
-
-
-
-// import { useState } from 'react';
-// import { useUser } from "@clerk/clerk-react";
-// import { Button } from "../ui/button";
-// import { Link } from "react-router-dom";
-// import { UserButton } from "@clerk/clerk-react";
-// import { FaSun, FaMoon ,FaLaptop} from 'react-icons/fa'; // Importing FontAwesome icons
-
-// function Header() {
-//   const { user, isSignedIn } = useUser();
-//   const [darkMode, setDarkMode] = useState(false);
-
-//   const toggleDarkMode = () => {
-//     setDarkMode(!darkMode);
-//     document.documentElement.classList.toggle('dark');
-//   };
-
-//   return (
-//     <div className="p-3 px-5 flex justify-between items-center shadow-md dark:bg-gray-800 bg-white dark:text-gray-100">
-//       {/* Logo */}
-//       {/* <img src="/mylogo.png" width={100} height={100} alt="Logo" /> */}
-//        <div className="flex items-center gap-2">
-//         <FaLaptop className="text-2xl" /> {/* Computer Icon */}
-//         <h1 className="text-2xl font-bold s">InterviewHub</h1>
-//       </div>
-
-//       <div className="flex gap-4 items-center">
-//         {/* Dark Mode Toggle Icon */}
-//         <button onClick={toggleDarkMode} className="text-xl">
-//           {darkMode ? <FaSun className="text-grey-400" /> : <FaMoon className="text-grey-300" />}
-//         </button>
-
-//         {isSignedIn ? (
-//           <div className="flex gap-2 items-center">
-//             <Link to={"/dashboard"}>
-//               <Button variant="outline" className="dark:border-gray-500 dark:text-gray-200">Dashboard</Button>
-//             </Link>
-//             <UserButton />
-//           </div>
-//         ) : (
-//           <Link to={"/auth/sign-in"}>
-//             <Button className="dark:bg-gray-700 dark:text-white">Get Started</Button>
-//           </Link>
-//         )}
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default Header;
-
-
-
-
-
-
-
-
-// // // import React from 'react'
-// // import { useUser } from "@clerk/clerk-react";
-// // import { Button } from "../ui/button";
-// // import { Link } from "react-router-dom";
-// // import { UserButton } from "@clerk/clerk-react";
-
-// // function Header() {
-// //   const { user, isSignedIn } = useUser();
-// //   return (
-// //     <div className="p-3 px-5 flex justify-between shadow-md gap-2">
-// //       <img src="/mylogo.png" width={100} height={100} />
-      
-
-// //       {isSignedIn ? (
-// //         <div className="flex gap-2 items-center">
-// //           <Link to={"/dashboard"}>
-// //             <Button variant="outline">Dashboard</Button>
-// //           </Link>
-// //           <UserButton />
-// //         </div>
-// //       ) : (
-// //         <Link to={"/auth/sign-in"}>
-// //           <Button>Get Started</Button>
-// //         </Link>
-// //       )}
-// //     </div>
-// //   );
-// // }
-
-// // export default Header;
